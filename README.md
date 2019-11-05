@@ -2,7 +2,7 @@
 
 [3dMove](https://tw-blackbear.github.io/3D-Test/boxmove.html)
 
-[Threejs&dat gui](https://tw-blackbear.github.io/3D-Test/boxmove.html)
+[Threejs&dat gui](https://tw-blackbear.github.io/3D-Test/index.html)
 
 
 ## sketchfab 3D作品平台
