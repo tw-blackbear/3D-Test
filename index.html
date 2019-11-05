@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zn-TW">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/106/three.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        *{
+            margin: 0;
+          
+             
+        }
+        canvas{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <title>thess.JS</title>
+</head>
+<body>
+    <script> 
+   
+    // 場景 / 攝影機 / 渲染器
+    var scene, camera, renderer;
+    // 形狀  //控制器 //xyz軸向宣告
+    var cude , gui ,xro ,yro ,zro ; 
+    init();
+    animate();
+    
+    function init() {
+        scene = new THREE.Scene();
+        //霧氣
+        scene.fog = new THREE.Fog(0x090b33, 5 ,100);
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+        renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0x0f0f0f,1);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        //宣告形狀 材質
+    var geometry = new THREE.BoxGeometry(1,1,1);
+    var material = new THREE.MeshBasicMaterial({color:0x0000ff});
+
+    cude = new THREE.Mesh(geometry, material);
+    scene.add(cude);
+    camera.position.z = 5;
+
+    //datgui
+    displaygui();
+    };
+    // xyz-animate裡設定
+    function spin(varname, xaxis, yaxis, zaxis) {
+        //移動速度
+        var speed =0.01;
+        if(varname == true){
+            if(xaxis == true){cude.rotation.x += speed;}
+            else if(yaxis == true){cude.rotation.y += speed;}
+            else cude.rotation.z += speed;
+        }
+        
+    }
+
+    //datgui控制版面設定
+    function displaygui() {
+        var gui = new dat.GUI();
+        var speed =0.1;
+        var jar;
+        
+        parameters ={
+            a: "cude",
+            b: "",
+            c: true,
+            d: "#0000ff",
+            e: 1, f:1, g:1,
+            h: 1, i:1, j:1,
+            k: 1, l:1, m:1,
+            x: false, y: false,z: false,
+            n:"",
+            o:"",
+
+         }
+        gui.add(parameters,'a').name('Name');
+        gui.add(parameters, 'b',["cude","sphere","prism"]).name('Geometry');
+
+
+        //宣告物件是否隱藏
+        var model = gui.add(parameters, 'c').name('ShowModel');
+        //宣告變色
+        
+        var color = gui.addColor(parameters, 'd').name('Color');
+
+        model.onChange(function(jar){cude.visible =jar;});
+        //在上面宣告一個jar變數利用setHex(threejs 16進位函數)賦予material 變色
+        color.onChange(function (jar) { cude.material.color.setHex (jar.replace("#","0x")); });
+        
+        //宣告變數作為-群組標題
+        //設定物件xyz變形
+        var dimen = gui.addFolder('Dimension');
+        var xdimen = dimen.add(parameters, 'e').min(1).max(20).step(speed).name('X-Axis');
+        var ydimen = dimen.add(parameters, 'f').min(1).max(20).step(speed).name('y-Axis');
+        var zdimen = dimen.add(parameters, 'g').min(1).max(20).step(speed).name('z-Axis');
+        xdimen.onChange(function (jar) { cude.scale.x = jar; });
+        ydimen.onChange(function (jar) { cude.scale.y = jar; });
+        zdimen.onChange(function (jar) { cude.scale.z = jar; });
+
+        //移動位置
+        var posit  = gui.addFolder('Position');
+        var xposit = posit.add(parameters, 'h').min(1).max(20).step(speed).name('X-Axis');
+        var yposit =posit.add(parameters, 'i').min(1).max(20).step(speed).name('y-Axis');
+        var zposit =posit.add(parameters, 'j').min(1).max(20).step(speed).name('z-Axis');
+        xposit.onChange(function (jar) { cude.position.x = jar; });
+        yposit.onChange(function (jar) { cude.position.y = jar; });
+        zposit.onChange(function (jar) { cude.position.z = jar; });
+
+        //設定旋轉角度
+        var rotat = gui.addFolder('Rotation');
+        var xspin = rotat.add(parameters, 'k').min(1).max(20).step(speed).name('X-Axis');
+        var yspin = rotat.add(parameters, 'l').min(1).max(20).step(speed).name('y-Axis');
+        var zspin = rotat.add(parameters, 'm').min(1).max(20).step(speed).name('z-Axis');
+        xspin.onChange(function (jar) { cude.rotation.x = jar; });
+        yspin.onChange(function (jar) { cude.rotation.y = jar; });
+        zspin.onChange(function (jar) { cude.rotation.z = jar; });
+
+        //設定動態
+        var anim = gui.addFolder('Animate');
+        var xanim = anim.add(parameters, 'x').name('X-Axis');
+        var yanim = anim.add(parameters, 'y').name('y-Axis');
+        var zanim = anim.add(parameters, 'z').name('z-Axis');
+        xanim.onChange(function (jar) { xro = jar; });
+        yanim.onChange(function (jar) { yro = jar; });
+        zanim.onChange(function (jar) { zro = jar; });
+        //
+        gui.add(parameters, 'n',[1,2,3,4,5]).name('Layer');
+        gui.add(parameters, 'n', ['Save','Load','Reset']).name('Option');
+
+        //是否自動展開控制
+        gui.close();
+        //gui.open();
+    
+    
+    }
+    function animate() {
+
+        spin(xro,true,false,false);
+        spin(yro, false, true, false);
+        spin(zro, false, false, true);
+
+        requestAnimationFrame(animate);
+        render();
+
+    };
+    //渲染場景
+    function render() {
+        renderer.clear();
+        renderer.render(scene, camera);
+    };
+     </script>
+    
+    
+</body>
+</html>
