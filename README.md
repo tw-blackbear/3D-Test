@@ -5,8 +5,9 @@
 <img src="https://tw-blackbear.github.io/3D-Test/Streetview.jpg" width="50%" height="50%"></img> 
 
 
-# x3dom --omgg.html
-# http://www.x3dom.org
+### 參考3D網頁做法
+ 
+[x3dom](http://www.x3dom.org)
 
 # Threejs -codepan
 # https://techbrood.com/threejs/docs/
